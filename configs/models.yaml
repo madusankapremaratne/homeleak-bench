@@ -1,0 +1,47 @@
+# Model roster evaluated under the shared benchmark protocol.
+# Replace placeholder ids with exact versioned model identifiers before
+# publishing results. See docs/model_protocol.md.
+
+generation:
+  temperature: 0
+  top_p: 1.0
+  max_tokens: 300
+  retries: 2
+  seed: 42
+  timeout_seconds: 60
+
+cache:
+  enabled: true
+  path: "results/cached_outputs"
+
+models:
+  - id: "mock-echo"
+    provider: "mock"
+    role: "baseline"
+
+  - id: "claude-sonnet-5"
+    provider: "anthropic"
+    role: "frontier_cloud"
+    env_key: "ANTHROPIC_API_KEY"
+
+  - id: "gpt-4.1"
+    provider: "openai"
+    role: "frontier_cloud"
+    env_key: "OPENAI_API_KEY"
+
+  # Local open-weight models served via Ollama's OpenAI-compatible API
+  # (`ollama serve`, default port 11434). No API key required.
+  - id: "llama3.2:latest"
+    provider: "local"
+    role: "small_open_weight"
+    endpoint: "http://localhost:11434/v1"
+
+  - id: "phi3.5:latest"
+    provider: "local"
+    role: "small_open_weight"
+    endpoint: "http://localhost:11434/v1"
+
+  - id: "qwen3-local:latest"
+    provider: "local"
+    role: "medium_open_weight"
+    endpoint: "http://localhost:11434/v1"

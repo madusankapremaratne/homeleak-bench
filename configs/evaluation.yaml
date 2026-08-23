@@ -1,0 +1,24 @@
+# Evaluation-stage configuration.
+
+confidence_threshold: 0.7
+
+abstention:
+  # A response counts as abstaining if it sets abstain=true, or its
+  # answer/activity_state equals one of these sentinel labels.
+  sentinel_labels: ["unknown", "uncertain"]
+
+calibration:
+  n_bins: 10
+
+statistics:
+  bootstrap_samples: 2000
+  bootstrap_seed: 42
+  confidence_level: 0.95
+
+utility:
+  reference_level: "C0"
+
+reporting:
+  metrics_dir: "results/metrics"
+  tables_dir: "results/tables"
+  figures_dir: "results/figures"

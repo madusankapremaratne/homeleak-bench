@@ -1,0 +1,83 @@
+# Definitions for the five context-minimization levels (C0-C4).
+# Each level is applied by src/homeleakbench/benchmark/minimization.py
+levels:
+  C0:
+    name: full_context
+    description: "Resident identifiers, exact rooms, timestamps, and activities are retained."
+    remove_identity: false
+    coarsen_time: false
+    coarsen_location: false
+    aggregate_only: false
+
+  C1:
+    name: identity_removed
+    description: "Resident identifiers are removed and replaced with anonymous references."
+    remove_identity: true
+    coarsen_time: false
+    coarsen_location: false
+    aggregate_only: false
+
+  C2:
+    name: time_coarsened
+    description: "Exact timestamps are replaced with broad time-of-day periods."
+    remove_identity: true
+    coarsen_time: true
+    coarsen_location: false
+    aggregate_only: false
+
+  C3:
+    name: location_coarsened
+    description: "Exact rooms are replaced with private/shared area categories."
+    remove_identity: true
+    coarsen_time: true
+    coarsen_location: true
+    aggregate_only: false
+
+  C4:
+    name: aggregate_state
+    description: "Only a high-level household occupancy/activity state remains."
+    remove_identity: true
+    coarsen_time: true
+    coarsen_location: true
+    aggregate_only: true
+
+# Rooms considered private vs. shared for C3/C4 coarsening.
+room_categories:
+  private_area:
+    - bedroom
+    - bedroom_1
+    - bedroom_2
+    - bathroom
+    - office
+    - study
+  shared_area:
+    - kitchen
+    - living_room
+    - dining_room
+    - hallway
+    - entrance
+    - garage
+
+# Time-of-day bucket boundaries (24h clock, local time) for C2+.
+time_periods:
+  - name: early_morning
+    start: "04:00"
+    end: "07:00"
+  - name: morning
+    start: "07:00"
+    end: "11:00"
+  - name: midday
+    start: "11:00"
+    end: "14:00"
+  - name: afternoon
+    start: "14:00"
+    end: "18:00"
+  - name: evening
+    start: "18:00"
+    end: "22:00"
+  - name: late_evening
+    start: "22:00"
+    end: "24:00"
+  - name: night
+    start: "00:00"
+    end: "04:00"

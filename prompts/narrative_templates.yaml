@@ -1,0 +1,26 @@
+# Sentence templates used by narrative_builder.py to turn a windowed
+# sequence of sensor events into natural-language household context.
+# {resident}, {room}, {time}, {duration}, {activity} are filled per event.
+
+event_templates:
+  entered_room: "{resident} entered the {room} {time}."
+  remained_inactive: "{resident} remained inactive in the {room} for {duration}."
+  active_in_room: "{resident} was active in the {room} {time}."
+  prepared_food: "{resident} prepared food in the {kitchen_room} {time}."
+  left_room: "{resident} left the {room} {time}."
+  appliance_used: "{resident} used the {appliance} in the {room} {time}."
+
+joiners:
+  same_time: " Meanwhile, "
+  sequential: " "
+  new_sentence: " "
+
+resident_phrases:
+  C0: "Resident {label}"
+  C1_first_mention: "A resident"
+  C1_subsequent: "Another resident"
+  C1_household: "A household member"
+
+time_phrases:
+  exact: "at {hh_mm}"
+  coarse: "{period}"

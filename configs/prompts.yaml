@@ -1,0 +1,44 @@
+# Maps benchmark tasks to prompt template files and their output schema.
+
+system_prompt: "prompts/system_prompt.md"
+
+tasks:
+  resident_identity:
+    kind: "privacy"
+    template: "prompts/privacy_inference.md"
+    labels: ["resident_A", "resident_B", "unknown"]
+    schema: "prompts/output_schema.json"
+
+  occupancy_state:
+    kind: "privacy"
+    template: "prompts/privacy_inference.md"
+    labels: ["one_resident_active", "multiple_residents_active", "uncertain"]
+    schema: "prompts/output_schema.json"
+
+  private_location:
+    kind: "privacy"
+    template: "prompts/privacy_inference.md"
+    labels: ["private_area", "shared_area", "unknown"]
+    schema: "prompts/output_schema.json"
+
+  routine_inference:
+    kind: "privacy"
+    template: "prompts/privacy_inference.md"
+    labels: ["morning_routine", "meal_related", "rest_or_sleep_period", "uncertain"]
+    schema: "prompts/output_schema.json"
+
+  co_resident_activity:
+    kind: "privacy"
+    template: "prompts/privacy_inference.md"
+    labels: ["yes", "no", "uncertain"]
+    schema: "prompts/output_schema.json"
+
+  activity_understanding:
+    kind: "utility"
+    template: "prompts/activity_utility.md"
+    labels:
+      - "cooking_or_meal_preparation"
+      - "resting"
+      - "cleaning_or_housework"
+      - "leaving_or_returning"
+    schema: "prompts/output_schema.json"

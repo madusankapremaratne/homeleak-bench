@@ -1,0 +1,37 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "HomeLeakBench Label Record",
+  "type": "object",
+  "required": ["item_id", "session_id", "window_id", "task", "label", "context_level"],
+  "properties": {
+    "item_id": { "type": "string" },
+    "session_id": { "type": "string" },
+    "window_id": { "type": "string" },
+    "context_level": {
+      "type": "string",
+      "enum": ["C0", "C1", "C2", "C3", "C4"]
+    },
+    "task": {
+      "type": "string",
+      "enum": [
+        "resident_identity",
+        "occupancy_state",
+        "private_location",
+        "routine_inference",
+        "co_resident_activity",
+        "activity_understanding"
+      ]
+    },
+    "label": { "type": "string" },
+    "narrative": { "type": "string" },
+    "evidence_event_ids": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "source_hash": {
+      "type": "string",
+      "description": "Salted hash of the original MuRAL session/resident identifiers."
+    }
+  },
+  "additionalProperties": false
+}

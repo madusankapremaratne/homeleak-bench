@@ -3,6 +3,14 @@
 .venv/
 .env*
 data/raw/
-results/
+data/processed/*
+!data/processed/.gitkeep
+results/*
+!results/*/
+results/*/*
+!results/*/.gitkeep
 __pycache__/
 *.pyc
+*.egg-info/
+.pytest_cache/
+.ruff_cache/

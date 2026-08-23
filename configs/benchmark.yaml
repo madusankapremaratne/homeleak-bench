@@ -1,0 +1,49 @@
+# Top-level benchmark construction configuration.
+
+data:
+  raw_dir: "data/raw/mural"
+  processed_dir: "data/processed"
+  manifests_dir: "data/manifests"
+  annotations_dir: "data/annotations"
+  # Column mapping for the MuRAL export you downloaded. Adjust if your
+  # local copy uses different column names — see
+  # data/source_instructions/mural_download.md for the expected schema.
+  column_map:
+    session_id: "session_id"
+    timestamp: "timestamp"
+    resident_id: "resident_id"
+    sensor_type: "sensor_type"
+    room: "room"
+    event_value: "event_value"
+    activity_label: "activity_label"
+
+windowing:
+  # Fixed-duration context windows built from consecutive sensor events.
+  window_seconds: 300
+  stride_seconds: 300
+  min_events_per_window: 2
+  max_events_per_window: 12
+
+narrative:
+  # Template set used by narrative_builder.py
+  template_pack: "prompts/narrative_templates.yaml"
+  include_duration_phrases: true
+
+context_levels: "configs/context_levels.yaml"
+
+splits:
+  seed: 42
+  ratios:
+    development: 0.6
+    pilot: 0.1
+    test: 0.3
+  # Split by session so no session leaks across splits.
+  split_by: "session_id"
+
+output:
+  manifest_files:
+    development: "data/manifests/development.csv"
+    pilot: "data/manifests/pilot.csv"
+    test: "data/manifests/test.csv"
+  privacy_labels: "data/annotations/privacy_labels.jsonl"
+  utility_labels: "data/annotations/utility_labels.jsonl"
