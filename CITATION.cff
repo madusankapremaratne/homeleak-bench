@@ -2,7 +2,7 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 title: "HomeLeakBench: A Multi-Resident Benchmark for Measuring LLM Privacy Inference from Smart-Home Context"
 authors:
-  - name: "HomeLeakBench Contributors"
+  - name: "Madusanka Premaratne Rathnayake Mudiyanselage"
 version: 0.1.0
 date-released: "2026-08-23"
 license: MIT
@@ -11,6 +11,6 @@ preferred-citation:
   type: article
   title: "HomeLeakBench: A Multi-Resident Benchmark for Measuring LLM Privacy Inference from Smart-Home Context"
   authors:
-    - name: "[Author Names]"
+    - name: "Madusanka Premaratne Rathnayake Mudiyanselage"
   journal: "arXiv preprint"
   year: 2026
