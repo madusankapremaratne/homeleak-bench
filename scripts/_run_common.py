@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 import pandas as pd
+from dotenv import load_dotenv
 
 from homeleakbench.benchmark.privacy_tasks import PRIVACY_TASKS
 from homeleakbench.benchmark.utility_tasks import UTILITY_TASKS
@@ -13,6 +14,11 @@ from homeleakbench.config import load_yaml
 from homeleakbench.llm.base_client import GenerationConfig, build_client
 from homeleakbench.llm.response_cache import CachedLLMClient
 from homeleakbench.llm.structured_output import parse_model_output
+
+# Loads API keys (NVIDIA_API_KEY, ANTHROPIC_API_KEY, OPENAI_API_KEY, ...)
+# from a .env file in the repo root, if present, without overriding any
+# already-exported shell environment variables.
+load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
 TASK_SPECS = {**PRIVACY_TASKS, **UTILITY_TASKS}
 

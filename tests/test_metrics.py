@@ -67,6 +67,41 @@ def test_unsupported_inference_rate():
     assert c0["unsupported_inference_rate"].iloc[0] == 0.5
 
 
+def test_sentinel_label_matching_ground_truth_is_not_abstention():
+    # "unknown" is a legitimate ground-truth class for some tasks (e.g.
+    # resident_identity in a multi-resident window). A model that predicts
+    # "unknown" without abstaining and is actually correct must not be
+    # miscounted as an abstention or an unsupported inference.
+    df = pd.DataFrame(
+        [
+            {
+                "model_id": "m1",
+                "task": "resident_identity",
+                "context_level": "C1",
+                "ground_truth": "unknown",
+                "prediction": "unknown",
+                "confidence": 0.8,
+                "abstain": False,
+            },
+            {
+                "model_id": "m1",
+                "task": "resident_identity",
+                "context_level": "C1",
+                "ground_truth": "resident_A",
+                "prediction": "unknown",
+                "confidence": 0.5,
+                "abstain": False,
+            },
+        ]
+    )
+    abst = abstention_rate(df, sentinel_labels={"unknown", "uncertain"})
+    uir = unsupported_inference_rate(df, sentinel_labels={"unknown", "uncertain"})
+    # Only the second row (predicted "unknown" but truth was "resident_A")
+    # is a genuine hedge; the first is a real, correct, non-abstaining answer.
+    assert abst["abstention_rate"].iloc[0] == 0.5
+    assert uir["unsupported_inference_rate"].iloc[0] == 0.0
+
+
 def test_activity_utility_and_retention():
     df = pd.DataFrame(
         [

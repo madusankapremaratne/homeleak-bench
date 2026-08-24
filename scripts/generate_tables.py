@@ -46,28 +46,28 @@ def main() -> None:
             benchmark_composition_table(items),
             out_dir / "benchmark_composition.tex",
             caption="Benchmark composition by split, task, and context level.",
-            label="tab:benchmark_composition",
+            label="tab:benchmark-composition",
         )
 
     write_latex_table(
         leakage_by_model_table(plr),
         out_dir / "leakage_by_model.tex",
         caption="Privacy Leakage Rate by model, task, and context level.",
-        label="tab:leakage_by_model",
+        label="tab:leakage-by-model",
     )
 
     write_latex_table(
         minimization_tradeoff_table(plr, utility),
         out_dir / "minimization_tradeoff.tex",
         caption="Privacy leakage vs. utility retention across context-minimization levels.",
-        label="tab:minimization_tradeoff",
+        label="tab:minimization-tradeoff",
     )
 
     write_latex_table(
         calibration_and_abstention_table(ece, abstention),
         out_dir / "calibration_and_abstention.tex",
         caption="Expected Calibration Error and abstention rate by model.",
-        label="tab:calibration_and_abstention",
+        label="tab:calibration-and-abstention",
     )
 
     print(f"Tables written to {out_dir}/")

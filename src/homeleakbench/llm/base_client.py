@@ -134,16 +134,33 @@ class OpenAIClient(BaseLLMClient):
 
 
 class LocalOpenAICompatClient(BaseLLMClient):
-    """For self-hosted/open-weight models exposed via an OpenAI-compatible endpoint."""
+    """For any OpenAI-compatible chat-completions endpoint: self-hosted/local
+    servers (e.g. Ollama) as well as hosted OpenAI-compatible APIs (e.g.
+    NVIDIA NIM). Pass `api_key_env` for endpoints that require a real key;
+    it defaults to a placeholder for local servers that ignore auth.
+    """
 
-    def __init__(self, model_id: str, config: GenerationConfig, endpoint: str):
+    def __init__(
+        self,
+        model_id: str,
+        config: GenerationConfig,
+        endpoint: str,
+        api_key_env: str | None = None,
+    ):
         super().__init__(model_id, config)
         self._endpoint = endpoint
+        self._api_key_env = api_key_env
 
     def _call(self, system_prompt: str, user_prompt: str) -> str:
         from openai import OpenAI
 
-        client = OpenAI(api_key="not-needed", base_url=self._endpoint)
+        api_key = "not-needed"
+        if self._api_key_env:
+            api_key = os.environ.get(self._api_key_env)
+            if not api_key:
+                raise RuntimeError(f"Set {self._api_key_env} to call {self.model_id}.")
+
+        client = OpenAI(api_key=api_key, base_url=self._endpoint)
         response = client.chat.completions.create(
             model=self.model_id,
             temperature=self.config.temperature,
@@ -154,6 +171,9 @@ class LocalOpenAICompatClient(BaseLLMClient):
                 {"role": "user", "content": user_prompt},
             ],
         )
+        # Some reasoning models (e.g. gpt-oss) split output into a separate
+        # `reasoning_content` field; only `content` holds the final answer
+        # our structured-output parser expects.
         return response.choices[0].message.content or ""
 
 
@@ -168,6 +188,8 @@ def build_client(model_spec: dict, config: GenerationConfig) -> BaseLLMClient:
     if provider == "openai":
         return OpenAIClient(model_id, config, model_spec.get("env_key", "OPENAI_API_KEY"))
     if provider == "local":
-        return LocalOpenAICompatClient(model_id, config, model_spec["endpoint"])
+        return LocalOpenAICompatClient(
+            model_id, config, model_spec["endpoint"], model_spec.get("env_key")
+        )
 
     raise ValueError(f"Unknown provider '{provider}' for model '{model_id}'.")
