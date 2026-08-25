@@ -1,0 +1,16 @@
+{
+  "run_id": "run-20260823T181538Z",
+  "started_at": "2026-08-23T18:15:38.578213+00:00",
+  "config_paths": {
+    "benchmark": "configs/benchmark.yaml",
+    "models": "configs/models.local.yaml"
+  },
+  "models": [
+    "llama3.2:latest",
+    "phi3.5:latest",
+    "qwen3-local:latest"
+  ],
+  "git_commit": "ae184b361a672f69cc55f61989a206a2b65e8d64",
+  "python_version": "3.13.3",
+  "notes": ""
+}

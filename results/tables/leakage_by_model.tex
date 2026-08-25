@@ -1,0 +1,25 @@
+\begin{table}
+\caption{Privacy Leakage Rate by model, task, and context level.}
+\label{tab:leakage_by_model}
+\begin{tabular}{llrrrrr}
+\toprule
+model_id & task & C0 & C1 & C2 & C3 & C4 \\
+\midrule
+llama3.2:latest & co_resident_activity & 0.708 & 0.667 & 0.458 & 0.542 & 1.000 \\
+llama3.2:latest & occupancy_state & 0.292 & 0.208 & 0.500 & 0.292 & 0.958 \\
+llama3.2:latest & private_location & 0.417 & 0.417 & 0.375 & 0.417 & 0.292 \\
+llama3.2:latest & resident_identity & 0.083 & 0.000 & 0.000 & 0.000 & 0.042 \\
+llama3.2:latest & routine_inference & 0.083 & 0.167 & 0.625 & 0.417 & 0.000 \\
+phi3.5:latest & co_resident_activity & 0.750 & 0.750 & 0.750 & 0.750 & 0.792 \\
+phi3.5:latest & occupancy_state & 1.000 & 0.750 & 0.750 & 0.750 & 1.000 \\
+phi3.5:latest & private_location & 0.417 & 0.458 & 0.458 & 0.500 & 0.000 \\
+phi3.5:latest & resident_identity & 0.208 & 0.000 & 0.000 & 0.000 & 0.000 \\
+phi3.5:latest & routine_inference & 0.625 & 0.625 & 0.833 & 0.500 & 0.000 \\
+qwen3-local:latest & co_resident_activity & 0.917 & 0.750 & 0.750 & 0.750 & 1.000 \\
+qwen3-local:latest & occupancy_state & 1.000 & 0.750 & 0.750 & 0.750 & 1.000 \\
+qwen3-local:latest & private_location & 0.375 & 0.458 & 0.458 & 0.500 & 0.000 \\
+qwen3-local:latest & resident_identity & 0.250 & 0.000 & 0.000 & 0.000 & 0.000 \\
+qwen3-local:latest & routine_inference & 0.292 & 0.292 & 0.417 & 0.083 & 0.000 \\
+\bottomrule
+\end{tabular}
+\end{table}

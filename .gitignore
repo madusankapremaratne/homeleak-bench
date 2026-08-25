@@ -5,10 +5,8 @@
 data/raw/
 data/processed/*
 !data/processed/.gitkeep
-results/*
-!results/*/
-results/*/*
-!results/*/.gitkeep
+results/cached_outputs/
+results/raw_generations/
 __pycache__/
 *.pyc
 *.egg-info/
