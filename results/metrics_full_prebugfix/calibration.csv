@@ -1,0 +1,4 @@
+model_id,n_bins,ece
+llama3.2:latest,10,0.2651657709103124
+phi3.5:latest,10,0.32993189341056844
+qwen3-local:latest,10,0.20044186046511625

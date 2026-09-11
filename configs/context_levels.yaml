@@ -27,7 +27,16 @@ levels:
 
   C3:
     name: location_coarsened
-    description: "Exact rooms are replaced with private/shared area categories."
+    description: >
+      Exact rooms are replaced with a functional room category (sleep,
+      hygiene, work, food, dining, communal, passage). Categories are
+      deliberately NOT the private_location task's own label vocabulary
+      (private_area / shared_area); recovering that label from a
+      functional category requires the same background-knowledge
+      inference a model must already apply at C0-C2 from a bare room
+      name (e.g. "bedroom implies private"), not a string match against
+      the narrative text. See docs/threat_model.md and the construct-
+      validity note in docs/annotation_guidelines.md.
     remove_identity: true
     coarsen_time: true
     coarsen_location: true
@@ -35,25 +44,44 @@ levels:
 
   C4:
     name: aggregate_state
-    description: "Only a high-level household occupancy/activity state remains."
+    description: >
+      Only structural summary statistics remain (event count, distinct
+      rooms touched, distinct sensor types, window duration). The
+      aggregate deliberately does NOT report resident count or a
+      private/shared or activity-type classification directly: earlier
+      versions of this level computed those booleans from the same
+      ground-truth fields used by label_derivation.py and wrote them
+      into the sentence almost verbatim (e.g. "Multiple household
+      members were..." for occupancy_state = multiple_residents_active),
+      which made several privacy and utility labels recoverable by
+      string match rather than inference. See docs/annotation_guidelines.md.
     remove_identity: true
     coarsen_time: true
     coarsen_location: true
     aggregate_only: true
 
-# Rooms considered private vs. shared for C3/C4 coarsening.
+# Functional room categories for C3 narrative coarsening. Intentionally
+# a different taxonomy, and different vocabulary, from
+# label_derivation.py's ROOM_CATEGORIES_DEFAULT (private_area /
+# shared_area), which is what the private_location task's ground truth
+# is derived from. The two must not share category names.
 room_categories:
-  private_area:
+  sleeping_area:
     - bedroom
     - bedroom_1
     - bedroom_2
+  hygiene_area:
     - bathroom
+  work_area:
     - office
     - study
-  shared_area:
+  food_area:
     - kitchen
-    - living_room
+  dining_area:
     - dining_room
+  communal_area:
+    - living_room
+  passage_area:
     - hallway
     - entrance
     - garage

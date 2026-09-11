@@ -55,7 +55,7 @@ def _room_category(room: str | None, room_categories: dict[str, list[str]]) -> s
     for category, rooms in room_categories.items():
         if room_l in rooms:
             return category.replace("_", " ")
-    return "shared area"
+    return "an unspecified area"
 
 
 def _resident_phrase(resident_id: str | None, seen: set[str], level: ContextLevelConfig) -> str:
@@ -76,7 +76,7 @@ def apply_minimization(
 ) -> str:
     """Return the minimized natural-language context string for one level."""
     if level.aggregate_only:
-        return _aggregate_state_sentence(narrative, room_categories)
+        return _aggregate_state_sentence(narrative)
 
     seen_residents: set[str] = set()
     sentences: list[str] = []
@@ -110,20 +110,33 @@ def _infer_verb(sentence: NarrativeSentence) -> str:
     return "was active"
 
 
-def _aggregate_state_sentence(narrative: Narrative, room_categories: dict[str, list[str]]) -> str:
-    residents = {s.resident_id for s in narrative.sentences if s.resident_id}
-    multi = len(residents) > 1
+def _aggregate_state_sentence(narrative: Narrative) -> str:
+    """Return a structural summary of the window for C4.
 
-    categories = set()
-    for s in narrative.sentences:
-        categories.add(_room_category(s.room, room_categories))
+    Deliberately reports only counts and durations computable from the
+    narrative's sentence list, never resident count or a room-category
+    classification directly: those are exactly the quantities
+    label_derivation.py uses to derive occupancy_state,
+    co_resident_activity, and private_location, so writing them into the
+    sentence (even paraphrased) makes the corresponding label recoverable
+    by string match rather than by inference. See the C4 config comment
+    in context_levels.yaml and docs/annotation_guidelines.md.
+    """
+    n_events = len(narrative.sentences)
+    if n_events == 0:
+        return "No sensor activity was recorded in this period."
 
-    active_state = (
-        "resting" if "private area" in categories and len(categories) == 1 else "active indoors"
+    rooms_touched = len({s.room for s in narrative.sentences if s.room})
+    sensor_types = len({s.sensor_type for s in narrative.sentences if s.sensor_type})
+    timestamps = [s.timestamp for s in narrative.sentences]
+    span_minutes = max(1, round((max(timestamps) - min(timestamps)).total_seconds() / 60))
+
+    def _plural(n: int, noun: str) -> str:
+        return f"{n} {noun}" if n == 1 else f"{n} {noun}s"
+
+    return (
+        f"The home recorded {_plural(n_events, 'sensor event')} "
+        f"across {_plural(max(rooms_touched, 1), 'room')} "
+        f"and {_plural(max(sensor_types, 1), 'sensor type')} "
+        f"over a {span_minutes}-minute period."
     )
-
-    if multi:
-        return (
-            f"Multiple household members were {active_state} in the home " f"at overlapping times."
-        )
-    return f"One household member was {active_state}."
