@@ -12,7 +12,7 @@ from homeleakbench.benchmark.privacy_tasks import PRIVACY_TASKS
 from homeleakbench.benchmark.utility_tasks import UTILITY_TASKS
 from homeleakbench.config import load_yaml
 from homeleakbench.llm.base_client import GenerationConfig, build_client
-from homeleakbench.llm.response_cache import CachedLLMClient
+from homeleakbench.llm.response_cache import CachedLLMClient, safe_path_component
 from homeleakbench.llm.structured_output import parse_model_output
 
 # Loads API keys (NVIDIA_API_KEY, ANTHROPIC_API_KEY, OPENAI_API_KEY, ...)
@@ -81,7 +81,7 @@ def run_generation_for_items(
     for model_spec in models_config["models"]:
         client = build_client(model_spec, gen_cfg)
         cached_client = CachedLLMClient(client, cache_dir, enabled=cache_enabled)
-        model_out_dir = Path(output_dir) / model_spec["id"]
+        model_out_dir = Path(output_dir) / safe_path_component(model_spec["id"])
         model_out_dir.mkdir(parents=True, exist_ok=True)
 
         rows = []
