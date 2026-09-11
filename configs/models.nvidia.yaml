@@ -20,3 +20,18 @@ models:
     role: "large_open_weight"
     endpoint: "https://integrate.api.nvidia.com/v1"
     env_key: "NVIDIA_API_KEY"
+
+  - id: "deepseek-ai/deepseek-v4-flash-0731"
+    provider: "local"
+    role: "large_open_weight"
+    endpoint: "https://integrate.api.nvidia.com/v1"
+    env_key: "NVIDIA_API_KEY"
+    # extra_body left unset deliberately: this model can run with an
+    # optional "thinking"/reasoning_effort mode (see NVIDIA's own example),
+    # but every other model in this roster runs under plain default
+    # settings, so this one does too for comparability. Uncomment to
+    # enable extended thinking instead:
+    # extra_body:
+    #   chat_template_kwargs:
+    #     thinking: true
+    #     reasoning_effort: "high"

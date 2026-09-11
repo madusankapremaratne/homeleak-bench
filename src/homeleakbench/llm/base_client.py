@@ -146,10 +146,18 @@ class LocalOpenAICompatClient(BaseLLMClient):
         config: GenerationConfig,
         endpoint: str,
         api_key_env: str | None = None,
+        extra_body: dict | None = None,
     ):
         super().__init__(model_id, config)
         self._endpoint = endpoint
         self._api_key_env = api_key_env
+        # Provider/model-specific request fields (e.g. NVIDIA NIM's
+        # chat_template_kwargs for toggling a DeepSeek model's thinking
+        # mode) that don't fit the shared GenerationConfig. Left unset by
+        # default so every model runs under the same plain-default
+        # settings used elsewhere in the protocol; only pass this for a
+        # model that needs it to behave sensibly at all.
+        self._extra_body = extra_body
 
     def _call(self, system_prompt: str, user_prompt: str) -> str:
         from openai import OpenAI
@@ -166,6 +174,7 @@ class LocalOpenAICompatClient(BaseLLMClient):
             temperature=self.config.temperature,
             top_p=self.config.top_p,
             max_tokens=self.config.max_tokens,
+            extra_body=self._extra_body,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
@@ -189,7 +198,11 @@ def build_client(model_spec: dict, config: GenerationConfig) -> BaseLLMClient:
         return OpenAIClient(model_id, config, model_spec.get("env_key", "OPENAI_API_KEY"))
     if provider == "local":
         return LocalOpenAICompatClient(
-            model_id, config, model_spec["endpoint"], model_spec.get("env_key")
+            model_id,
+            config,
+            model_spec["endpoint"],
+            model_spec.get("env_key"),
+            model_spec.get("extra_body"),
         )
 
     raise ValueError(f"Unknown provider '{provider}' for model '{model_id}'.")
