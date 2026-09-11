@@ -22,7 +22,8 @@ models:
     endpoint: "https://ollama.com/v1"
     env_key: "OLLAMA_API_KEY"
 
-  - id: "deepseek-v4.1-flash"
+
+  - id: "gemma4:31b"
     provider: "local"
     role: "large_open_weight"
     endpoint: "https://ollama.com/v1"
