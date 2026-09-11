@@ -1,0 +1,29 @@
+# Cloud-hosted models via Ollama Cloud's OpenAI-compatible API.
+# Requires OLLAMA_API_KEY to be set (create one at https://ollama.com/settings/keys).
+# Use with:
+#   python scripts/run_pilot.py --config configs/benchmark.yaml --models configs/models.ollama-cloud.yaml --output results/raw_generations/pilot_ollama_cloud
+
+generation:
+  temperature: 0
+  top_p: 1.0
+  max_tokens: 4096
+  retries: 2
+  seed: 42
+  timeout_seconds: 120
+
+cache:
+  enabled: true
+  path: "results/cached_outputs"
+
+models:
+  - id: "gpt-oss:120b"
+    provider: "local"
+    role: "large_open_weight"
+    endpoint: "https://ollama.com/v1"
+    env_key: "OLLAMA_API_KEY"
+
+  - id: "deepseek-v4.1-flash"
+    provider: "local"
+    role: "large_open_weight"
+    endpoint: "https://ollama.com/v1"
+    env_key: "OLLAMA_API_KEY"
