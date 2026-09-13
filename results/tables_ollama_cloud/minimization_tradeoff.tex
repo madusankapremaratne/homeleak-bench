@@ -1,0 +1,21 @@
+\begin{table}[!htb]
+\caption{Privacy leakage vs. utility retention across context-minimization levels.}
+\label{tab:minimization-tradeoff}
+\setbox0=\hbox{\begin{tabular}{llrr}
+\toprule
+Model & Context Level & PLR & Utility Retention \\
+\midrule
+Gemma4:31B & C0 & 0.675 & 1.000 \\
+Gemma4:31B & C1 & 0.558 & 1.000 \\
+Gemma4:31B & C2 & 0.567 & 1.111 \\
+Gemma4:31B & C3 & 0.533 & 0.778 \\
+Gemma4:31B & C4 & 0.000 & 0.000 \\
+GPT-OSS-120B (Cloud) & C0 & 0.683 & 1.000 \\
+GPT-OSS-120B (Cloud) & C1 & 0.550 & 1.091 \\
+GPT-OSS-120B (Cloud) & C2 & 0.592 & 1.000 \\
+GPT-OSS-120B (Cloud) & C3 & 0.575 & 1.000 \\
+GPT-OSS-120B (Cloud) & C4 & 0.042 & 0.000 \\
+\bottomrule
+\end{tabular}}%
+\ifdim\wd0>\linewidth\resizebox{\linewidth}{!}{\copy0}\else\copy0\fi
+\end{table}

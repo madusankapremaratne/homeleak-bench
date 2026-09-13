@@ -1,25 +1,26 @@
-\begin{table}
+\begin{table}[!htb]
 \caption{Privacy leakage vs. utility retention across context-minimization levels.}
 \label{tab:minimization-tradeoff}
-\begin{tabular}{llrr}
+\setbox0=\hbox{\begin{tabular}{llrr}
 \toprule
-model_id & context_level & privacy_leakage_rate & utility_retention \\
+Model & Context Level & PLR & Utility Retention \\
 \midrule
-llama3.2:latest & C0 & 0.372 & 1.000 \\
-llama3.2:latest & C1 & 0.311 & 0.667 \\
-llama3.2:latest & C2 & 0.367 & 0.967 \\
-llama3.2:latest & C3 & 0.382 & 0.800 \\
-llama3.2:latest & C4 & 0.001 & 0.267 \\
-phi3.5:latest & C0 & 0.630 & 1.000 \\
-phi3.5:latest & C1 & 0.567 & 1.015 \\
-phi3.5:latest & C2 & 0.553 & 1.000 \\
-phi3.5:latest & C3 & 0.565 & 0.508 \\
-phi3.5:latest & C4 & 0.007 & 0.000 \\
-qwen3-local:latest & C0 & 0.606 & 1.000 \\
-qwen3-local:latest & C1 & 0.492 & 0.760 \\
-qwen3-local:latest & C2 & 0.464 & 0.417 \\
-qwen3-local:latest & C3 & 0.514 & 0.531 \\
-qwen3-local:latest & C4 & 0.000 & 0.000 \\
+Llama 3.2 & C0 & 0.372 & 1.000 \\
+Llama 3.2 & C1 & 0.311 & 0.667 \\
+Llama 3.2 & C2 & 0.367 & 0.967 \\
+Llama 3.2 & C3 & 0.382 & 0.800 \\
+Llama 3.2 & C4 & 0.001 & 0.267 \\
+Phi-3.5 & C0 & 0.630 & 1.000 \\
+Phi-3.5 & C1 & 0.567 & 1.015 \\
+Phi-3.5 & C2 & 0.553 & 1.000 \\
+Phi-3.5 & C3 & 0.565 & 0.508 \\
+Phi-3.5 & C4 & 0.007 & 0.000 \\
+Qwen3 & C0 & 0.606 & 1.000 \\
+Qwen3 & C1 & 0.492 & 0.760 \\
+Qwen3 & C2 & 0.464 & 0.417 \\
+Qwen3 & C3 & 0.514 & 0.531 \\
+Qwen3 & C4 & 0.000 & 0.000 \\
 \bottomrule
-\end{tabular}
+\end{tabular}}%
+\ifdim\wd0>\linewidth\resizebox{\linewidth}{!}{\copy0}\else\copy0\fi
 \end{table}

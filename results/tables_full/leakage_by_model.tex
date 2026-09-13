@@ -1,25 +1,26 @@
-\begin{table}
+\begin{table}[!htb]
 \caption{Privacy Leakage Rate by model, task, and context level.}
 \label{tab:leakage-by-model}
-\begin{tabular}{llrrrrr}
+\setbox0=\hbox{\begin{tabular}{llrrrrr}
 \toprule
-model_id & task & C0 & C1 & C2 & C3 & C4 \\
+Model & Task & C0 & C1 & C2 & C3 & C4 \\
 \midrule
-llama3.2:latest & co_resident_activity & 0.712 & 0.605 & 0.605 & 0.544 & 0.000 \\
-llama3.2:latest & occupancy_state & 0.433 & 0.414 & 0.521 & 0.456 & 0.000 \\
-llama3.2:latest & private_location & 0.419 & 0.405 & 0.307 & 0.488 & 0.005 \\
-llama3.2:latest & resident_identity & 0.219 & 0.000 & 0.000 & 0.000 & 0.000 \\
-llama3.2:latest & routine_inference & 0.079 & 0.130 & 0.405 & 0.423 & 0.000 \\
-phi3.5:latest & co_resident_activity & 0.744 & 0.749 & 0.712 & 0.749 & 0.000 \\
-phi3.5:latest & occupancy_state & 0.967 & 0.744 & 0.730 & 0.735 & 0.037 \\
-phi3.5:latest & private_location & 0.535 & 0.660 & 0.660 & 0.684 & 0.000 \\
-phi3.5:latest & resident_identity & 0.242 & 0.000 & 0.000 & 0.000 & 0.000 \\
-phi3.5:latest & routine_inference & 0.660 & 0.684 & 0.660 & 0.656 & 0.000 \\
-qwen3-local:latest & co_resident_activity & 0.944 & 0.753 & 0.753 & 0.753 & 0.000 \\
-qwen3-local:latest & occupancy_state & 0.986 & 0.753 & 0.753 & 0.753 & 0.000 \\
-qwen3-local:latest & private_location & 0.567 & 0.684 & 0.647 & 0.567 & 0.000 \\
-qwen3-local:latest & resident_identity & 0.247 & 0.000 & 0.000 & 0.000 & 0.000 \\
-qwen3-local:latest & routine_inference & 0.284 & 0.270 & 0.167 & 0.498 & 0.000 \\
+Llama 3.2 & co-resident activity & 0.712 & 0.605 & 0.605 & 0.544 & 0.000 \\
+Llama 3.2 & occupancy state & 0.433 & 0.414 & 0.521 & 0.456 & 0.000 \\
+Llama 3.2 & private location & 0.419 & 0.405 & 0.307 & 0.488 & 0.005 \\
+Llama 3.2 & resident identity & 0.219 & 0.000 & 0.000 & 0.000 & 0.000 \\
+Llama 3.2 & routine inference & 0.079 & 0.130 & 0.405 & 0.423 & 0.000 \\
+Phi-3.5 & co-resident activity & 0.744 & 0.749 & 0.712 & 0.749 & 0.000 \\
+Phi-3.5 & occupancy state & 0.967 & 0.744 & 0.730 & 0.735 & 0.037 \\
+Phi-3.5 & private location & 0.535 & 0.660 & 0.660 & 0.684 & 0.000 \\
+Phi-3.5 & resident identity & 0.242 & 0.000 & 0.000 & 0.000 & 0.000 \\
+Phi-3.5 & routine inference & 0.660 & 0.684 & 0.660 & 0.656 & 0.000 \\
+Qwen3 & co-resident activity & 0.944 & 0.753 & 0.753 & 0.753 & 0.000 \\
+Qwen3 & occupancy state & 0.986 & 0.753 & 0.753 & 0.753 & 0.000 \\
+Qwen3 & private location & 0.567 & 0.684 & 0.647 & 0.567 & 0.000 \\
+Qwen3 & resident identity & 0.247 & 0.000 & 0.000 & 0.000 & 0.000 \\
+Qwen3 & routine inference & 0.284 & 0.270 & 0.167 & 0.498 & 0.000 \\
 \bottomrule
-\end{tabular}
+\end{tabular}}%
+\ifdim\wd0>\linewidth\resizebox{\linewidth}{!}{\copy0}\else\copy0\fi
 \end{table}
