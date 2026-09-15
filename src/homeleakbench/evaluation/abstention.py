@@ -19,15 +19,20 @@ def _is_abstain(df: pd.DataFrame, sentinel_labels: set[str]) -> pd.Series:
 
 
 def unsupported_inference_rate(results: pd.DataFrame, sentinel_labels: set[str]) -> pd.DataFrame:
-    """Rate of non-abstaining answers that are wrong and not a sentinel label."""
+    """Rate of non-abstaining answers that are wrong and not a sentinel label.
+
+    The denominator is the count of non-abstaining answers, matching the
+    paper's stated definition -- not the count of all answers regardless
+    of abstention.
+    """
     df = results.copy()
-    df["unsupported"] = (~_is_abstain(df, sentinel_labels)) & (
-        df["prediction"] != df["ground_truth"]
-    )
+    not_abstain = ~_is_abstain(df, sentinel_labels)
+    df["not_abstain"] = not_abstain
+    df["unsupported"] = not_abstain & (df["prediction"] != df["ground_truth"])
 
     grouped = (
         df.groupby(["model_id", "task", "context_level"])
-        .agg(unsupported=("unsupported", "sum"), n_answers=("unsupported", "count"))
+        .agg(unsupported=("unsupported", "sum"), n_answers=("not_abstain", "sum"))
         .reset_index()
     )
     grouped["unsupported_inference_rate"] = grouped["unsupported"] / grouped["n_answers"]

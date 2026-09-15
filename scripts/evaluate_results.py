@@ -60,10 +60,10 @@ def main() -> None:
 
     privacy_results = results[results["task"] != "activity_understanding"]
 
-    plr = privacy_leakage_rate(privacy_results)
+    plr = privacy_leakage_rate(privacy_results, sentinel_labels)
     plr.to_csv(out_dir / "privacy_leakage.csv", index=False)
 
-    hclr = high_confidence_leakage_rate(privacy_results, tau=tau)
+    hclr = high_confidence_leakage_rate(privacy_results, sentinel_labels, tau=tau)
     hclr.to_csv(out_dir / "privacy_leakage_high_confidence.csv", index=False)
 
     utility = activity_utility(results)

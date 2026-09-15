@@ -1,4 +1,5 @@
 \begin{table}[!htb]
+\centering
 \caption{Expected Calibration Error and abstention rate by model.}
 \label{tab:calibration-and-abstention}
 \setbox0=\hbox{\begin{tabular}{lrrr}
@@ -9,5 +10,5 @@ Gemma4:31B & 10 & 0.439 & 0.392 \\
 GPT-OSS-120B (Cloud) & 10 & 0.311 & 0.338 \\
 \bottomrule
 \end{tabular}}%
-\ifdim\wd0>\linewidth\resizebox{\linewidth}{!}{\copy0}\else\copy0\fi
+\ifdim\wd0>\linewidth\centerline{\resizebox{\linewidth}{!}{\copy0}}\else\centerline{\copy0}\fi
 \end{table}

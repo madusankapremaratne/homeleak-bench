@@ -68,20 +68,35 @@ def write_latex_table(df: pd.DataFrame, path: str | Path, caption: str, label: s
     # \ref{}'d in the surrounding prose rather than drifting to whatever
     # the document class's default float placement happens to choose
     # (which can push it well before any text explains it).
-    latex = latex.replace("\\begin{table}", "\\begin{table}[!htb]", 1)
+    # Placement hint (land near the first \ref{}, not wherever the class
+    # default float rules push it) plus \centering, so every generated
+    # table is horizontally centered on the page like the hand-written
+    # inline tables and figures elsewhere in the paper (df.to_latex()
+    # adds neither by default, which was the source of the left- vs.
+    # centered-table inconsistency across the document).
+    latex = latex.replace("\\begin{table}", "\\begin{table}[!htb]\n\\centering", 1)
     # Shrink the tabular to fit the page width only if it's actually wider
     # than the page (e.g. a per-task-per-level breakdown with many
     # columns); a table that already fits is left at its natural size, so
     # it renders at the surrounding body-text font size rather than being
     # stretched up to fill \linewidth regardless of how few columns it has
     # (an unconditional \resizebox does that, and was the previous bug).
+    # The box is centered with \centerline rather than relying on
+    # \centering's paragraph-glue mechanism: a bare \copy0 dropped after a
+    # \setbox assignment does not go through normal paragraph breaking, so
+    # \leftskip/\rightskip-based centering (\centering, or the `center`
+    # environment) silently has no effect on it and the table renders
+    # flush left regardless. \centerline explicitly computes and inserts
+    # the centering glue around a single box, and is unaffected by that.
     latex = latex.replace(
         "\\begin{tabular}",
         "\\setbox0=\\hbox{\\begin{tabular}",
     ).replace(
         "\\end{tabular}",
         "\\end{tabular}}%\n"
-        "\\ifdim\\wd0>\\linewidth\\resizebox{\\linewidth}{!}{\\copy0}\\else\\copy0\\fi",
+        "\\ifdim\\wd0>\\linewidth"
+        "\\centerline{\\resizebox{\\linewidth}{!}{\\copy0}}"
+        "\\else\\centerline{\\copy0}\\fi",
     )
     path.write_text(latex, encoding="utf-8")
 

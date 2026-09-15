@@ -333,7 +333,7 @@ If you find HomeLeakBench useful in your research, please cite our preprint:
 ```bibtex
 @article{homeleakbench2026,
   title     = {HomeLeakBench: A Multi-Resident Benchmark for Measuring LLM Privacy Inference from Smart-Home Context},
-  author    = {Premaratne Rathnayake Mudiyanselage, Madusanka and Thellapura Arachchilage, Hasanthi Lakmali and Wickramasinghe, Nuthara Nivindee and Fernando, Ishara Shyamali},
+  author    = {Rathnayake Mudiyanselage, Madusanka Premaratne and Thellapura Arachchilage, Hasanthi Lakmali and Wickramasinghe, Nuthara Nivindee and Fernando, Ishara Shyamali},
   journal   = {Preprint submitted to Elsevier},
   year      = {2026}
 }
