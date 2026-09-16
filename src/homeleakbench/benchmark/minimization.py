@@ -59,13 +59,26 @@ def _room_category(room: str | None, room_categories: dict[str, list[str]]) -> s
 
 
 def _resident_phrase(resident_id: str | None, seen: set[str], level: ContextLevelConfig) -> str:
+    """Identity-removed phrase for one sentence's resident.
+
+    Preserves within-window co-presence (whether more than one distinct
+    resident appears) without inventing an extra person: a resident's
+    *first* appearance in the window is "a resident" (or "a household
+    member" if a different resident already appeared earlier), and a
+    *repeat* appearance of a resident already introduced refers back to
+    them ("the same resident" / "that household member") rather than
+    using "another resident" -- which, in ordinary English, asserts a
+    different person and would misrepresent a single resident's second
+    event as evidence of a second occupant.
+    """
     if not level.remove_identity:
         return f"Resident {resident_id}" if resident_id else "A resident"
-    if resident_id is None or resident_id not in seen:
-        if resident_id is not None:
-            seen.add(resident_id)
-        return "A resident" if not seen or len(seen) <= 1 else "A household member"
-    return "Another resident"
+    if resident_id is None:
+        return "A resident" if len(seen) <= 1 else "A household member"
+    if resident_id in seen:
+        return "The same resident" if len(seen) <= 1 else "That household member"
+    seen.add(resident_id)
+    return "A resident" if len(seen) == 1 else "A household member"
 
 
 def apply_minimization(

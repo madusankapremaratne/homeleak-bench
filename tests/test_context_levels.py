@@ -61,6 +61,66 @@ def test_c1_removes_resident_identifiers(sample_window):
     assert "Resident B" not in text
 
 
+def test_c1_does_not_invent_a_second_resident_for_repeat_mentions():
+    """Regression test for the resident-phrase bug found in external review:
+    two consecutive events belonging to the *same* resident must not be
+    rendered as "A resident ... Another resident ...", since "another
+    resident" asserts a different person and would make a single
+    resident's second event look like evidence of co-presence.
+    """
+    events = pd.DataFrame(
+        [
+            {
+                "session_id": "s1",
+                "timestamp": pd.Timestamp("2024-01-01 22:40:00"),
+                "resident_id": "A",
+                "sensor_type": "motion",
+                "room": "bedroom",
+                "event_value": "ON",
+                "event_id": "s1-0",
+            },
+            {
+                "session_id": "s1",
+                "timestamp": pd.Timestamp("2024-01-01 22:41:00"),
+                "resident_id": "A",
+                "sensor_type": "appliance",
+                "room": "kitchen",
+                "event_value": "ON",
+                "event_id": "s1-1",
+            },
+        ]
+    )
+    window = EventWindow(
+        window_id="s1-w0",
+        session_id="s1",
+        start=events["timestamp"].min(),
+        end=events["timestamp"].max(),
+        events=events,
+    )
+    narrative = build_narrative(window)
+    text = apply_minimization(
+        narrative, LEVELS["C1"], CONFIG["room_categories"], CONFIG["time_periods"]
+    )
+    assert "another resident" not in text.lower()
+    assert "household member" not in text.lower()
+    assert "the same resident" in text.lower()
+
+
+def test_c1_still_signals_genuine_co_presence_of_two_distinct_residents(sample_window):
+    """A window with two genuinely distinct residents (the existing
+    sample_window fixture: resident B then resident A) should still read
+    as two different people -- identity removal must not erase the
+    co-presence signal that the C1 design intentionally preserves.
+    """
+    narrative = build_narrative(sample_window)
+    text = apply_minimization(
+        narrative, LEVELS["C1"], CONFIG["room_categories"], CONFIG["time_periods"]
+    )
+    assert "a resident" in text.lower()
+    assert "a household member" in text.lower()
+    assert "another resident" not in text.lower()
+
+
 def test_c2_coarsens_time(sample_window):
     narrative = build_narrative(sample_window)
     text = apply_minimization(
