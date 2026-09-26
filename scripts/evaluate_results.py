@@ -21,10 +21,14 @@ from homeleakbench.evaluation.abstention import abstention_rate, unsupported_inf
 from homeleakbench.evaluation.calibration import expected_calibration_error, reliability_bins
 from homeleakbench.evaluation.error_analysis import error_breakdown
 from homeleakbench.evaluation.privacy_metrics import (
+    _is_correct,
     high_confidence_leakage_rate,
     privacy_leakage_rate,
 )
+from homeleakbench.evaluation.statistics import cluster_bootstrap_metric_by_group
 from homeleakbench.evaluation.utility_metrics import activity_utility, utility_retention
+
+MIN_SESSIONS_FOR_CLUSTER_BOOTSTRAP = 5
 
 
 def load_generations(input_dir: str) -> pd.DataFrame:
@@ -82,6 +86,24 @@ def main() -> None:
 
     errors = error_breakdown(results)
     errors.to_csv(out_dir / "error_analysis.csv", index=False)
+
+    # Session-cluster bootstrap CI for PLR by context level, pooling all
+    # models in this input directory together. Benchmark items are not
+    # independent draws (a handful of source sessions, and a share of
+    # items render to byte-identical prompts at high minimization
+    # levels), so this resamples whole sessions rather than individual
+    # items -- the standard cluster-bootstrap correction. `reliable=False`
+    # flags context levels with too few distinct sessions for the
+    # resampling distribution to be meaningful (e.g. the 2-session
+    # Ollama Cloud pilot), rather than silently reporting a
+    # narrow-looking interval that isn't actually informative.
+    plr_df = privacy_results.copy()
+    plr_df["correct"] = plr_df.apply(_is_correct, axis=1, sentinel_labels=sentinel_labels)
+    cluster_ci = cluster_bootstrap_metric_by_group(
+        plr_df, "correct", ["context_level"], n_samples=2000, seed=42
+    )
+    cluster_ci["reliable"] = cluster_ci["n_sessions"] >= MIN_SESSIONS_FOR_CLUSTER_BOOTSTRAP
+    cluster_ci.to_csv(out_dir / "plr_cluster_bootstrap.csv", index=False)
 
     print(f"Metrics written to {out_dir}/")
 

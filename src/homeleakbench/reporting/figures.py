@@ -39,15 +39,40 @@ def leakage_by_privacy_target(plr: pd.DataFrame, out_path: str | Path) -> None:
     _save(fig, out_path)
 
 
+def _pool_reliability_across_tasks(group: pd.DataFrame) -> pd.DataFrame:
+    """Collapse one model's per-(task, bin) reliability rows to one row per
+    confidence bin, via a sample-weighted mean across tasks.
+
+    `reliability_bins` (homeleakbench.evaluation.calibration) computes bins
+    separately per (model, task), so a bare `groupby("model_id")` over its
+    output has one row per (task, bin): plotting and connecting those
+    directly draws a line that jumps between different tasks' calibration
+    summaries at each step, which has no coherent statistical meaning. This
+    pools across tasks within each bin, weighted by `n_samples`, so the
+    resulting curve is a genuine per-model reliability diagram.
+    """
+    g = group.copy()
+    g["weighted_confidence"] = g["bin_mean_confidence"] * g["n_samples"]
+    g["weighted_accuracy"] = g["bin_accuracy"] * g["n_samples"]
+    pooled = g.groupby("bin", observed=True).agg(
+        n_samples=("n_samples", "sum"),
+        weighted_confidence=("weighted_confidence", "sum"),
+        weighted_accuracy=("weighted_accuracy", "sum"),
+    )
+    pooled["bin_mean_confidence"] = pooled["weighted_confidence"] / pooled["n_samples"]
+    pooled["bin_accuracy"] = pooled["weighted_accuracy"] / pooled["n_samples"]
+    return pooled.reset_index()[["bin", "bin_mean_confidence", "bin_accuracy", "n_samples"]]
+
+
 def calibration_plot(reliability: pd.DataFrame, out_path: str | Path) -> None:
     fig, ax = plt.subplots(figsize=(5, 5))
     ax.plot([0, 1], [0, 1], linestyle="--", color="gray", label="perfect calibration")
     for model_id, group in reliability.groupby("model_id"):
-        group = group.sort_values("bin_mean_confidence")
-        ax.plot(group["bin_mean_confidence"], group["bin_accuracy"], marker="o", label=model_id)
+        pooled = _pool_reliability_across_tasks(group).sort_values("bin_mean_confidence")
+        ax.plot(pooled["bin_mean_confidence"], pooled["bin_accuracy"], marker="o", label=model_id)
     ax.set_xlabel("Mean predicted confidence")
     ax.set_ylabel("Empirical accuracy")
-    ax.set_title("Calibration")
+    ax.set_title("Calibration (sample-weighted pooled across tasks)")
     ax.legend()
     _save(fig, out_path)
 
